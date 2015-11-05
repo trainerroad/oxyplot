@@ -375,22 +375,22 @@ namespace OxyPlot.Axes
                 switch (axis.Position)
                 {
                     case AxisPosition.Left:
-                        pt = new ScreenPoint(axisPosition + a1 - axis.AxisTickToLabelDistance, transformedValue);
+                        pt = new ScreenPoint(axisPosition + a1 - axis.AxisTickToLabelDistance, transformedValue - axis.AxisTickToLabelShiftDistance);
                         this.GetRotatedAlignments(axis.Angle, -90, out ha, out va);
 
                         break;
                     case AxisPosition.Right:
-                        pt = new ScreenPoint(axisPosition + a1 + axis.AxisTickToLabelDistance, transformedValue);
+                        pt = new ScreenPoint(axisPosition + a1 + axis.AxisTickToLabelDistance, transformedValue - axis.AxisTickToLabelShiftDistance);
                         this.GetRotatedAlignments(axis.Angle, 90, out ha, out va);
 
                         break;
                     case AxisPosition.Top:
-                        pt = new ScreenPoint(transformedValue, axisPosition + a1 - axis.AxisTickToLabelDistance);
+                        pt = new ScreenPoint(transformedValue - axis.AxisTickToLabelShiftDistance, axisPosition + a1 - axis.AxisTickToLabelDistance);
                         this.GetRotatedAlignments(axis.Angle, 0, out ha, out va);
 
                         break;
                     case AxisPosition.Bottom:
-                        pt = new ScreenPoint(transformedValue, axisPosition + a1 + axis.AxisTickToLabelDistance);
+                        pt = new ScreenPoint(transformedValue - axis.AxisTickToLabelShiftDistance, axisPosition + a1 + axis.AxisTickToLabelDistance);
                         this.GetRotatedAlignments(axis.Angle, -180, out ha, out va);
 
                         break;
