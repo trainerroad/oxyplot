@@ -209,6 +209,11 @@ namespace OxyPlot.Axes
         public double AxisTickToLabelDistance { get; set; }
 
         /// <summary>
+        /// Gets or sets the distance defore or after the tick lines to the labels. The default value is <c>0</c>.
+        /// </summary>
+        public double AxisTickToLabelShiftDistance { get; set; }
+
+        /// <summary>
         /// Gets or sets the minimum distance from the axis labels to the axis title. The default value is <c>4</c>.
         /// </summary>
         public double AxisTitleDistance { get; set; }
