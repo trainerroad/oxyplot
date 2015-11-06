@@ -76,8 +76,8 @@ namespace OxyPlot.Axes
         protected override double CalculateActualInterval(double availableSize, double maxIntervalSize)
         {
             double range = Math.Abs(this.ActualMinimum - this.ActualMaximum);
-            double interval = 1;
-            var goodIntervals = new[] { 1.0, 5, 10, 30, 60, 120, 300, 600, 900, 1200, 1800, 3600 };
+            double interval = 1.0;
+            var goodIntervals = new[] { 5, 10, 30, 60, 120, 300, 600, 900, 1200, 1800, 3600 };
 
             int maxNumberOfIntervals = Math.Max((int)(availableSize / maxIntervalSize), 2);
 
@@ -89,7 +89,7 @@ namespace OxyPlot.Axes
                 }
 
                 double nextInterval = goodIntervals.FirstOrDefault(i => i > interval);
-                if (Math.Abs(nextInterval) < double.Epsilon)
+                if (Math.Abs(nextInterval) < 1.0)
                 {
                     nextInterval = interval * 2;
                 }
