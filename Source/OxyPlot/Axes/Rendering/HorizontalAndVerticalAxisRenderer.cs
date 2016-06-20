@@ -284,12 +284,29 @@ namespace OxyPlot.Axes
             double plotAreaTop = this.Plot.PlotArea.Top;
             double plotAreaBottom = this.Plot.PlotArea.Bottom;
             bool isHorizontal = axis.IsHorizontal();
+            bool cropGridlines = axis.CropGridlines;
 
             double a0;
             double a1;
             var majorSegments = new List<ScreenPoint>();
             var majorTickSegments = new List<ScreenPoint>();
             this.GetTickPositions(axis, axis.TickStyle, axis.MajorTickSize, axis.Position, out a0, out a1);
+
+            var perpendicularAxis = axis.IsHorizontal() ? this.Plot.DefaultYAxis : this.Plot.DefaultXAxis;
+            var dontRenderZero = axis.PositionAtZeroCrossing && perpendicularAxis.PositionAtZeroCrossing;
+
+            List<Axis> perpAxes = null;
+            if (cropGridlines)
+            {
+                if (isHorizontal)
+                {
+                    perpAxes = this.Plot.Axes.Where(x => x.IsXyAxis() && x.IsVertical()).ToList();
+                }
+                else
+                {
+                    perpAxes = this.Plot.Axes.Where(x => x.IsXyAxis() && x.IsHorizontal()).ToList();
+                }
+            }
 
             foreach (double value in this.MajorTickValues)
             {
@@ -298,7 +315,7 @@ namespace OxyPlot.Axes
                     continue;
                 }
 
-                if (axis.PositionAtZeroCrossing && Math.Abs(value) < eps)
+                if (dontRenderZero && Math.Abs(value) < eps)
                 {
                     continue;
                 }
@@ -317,16 +334,16 @@ namespace OxyPlot.Axes
 
                 if (this.MajorPen != null)
                 {
-                    if (isHorizontal)
-                    {
-                        majorSegments.Add(new ScreenPoint(transformedValue, plotAreaTop));
-                        majorSegments.Add(new ScreenPoint(transformedValue, plotAreaBottom));
-                    }
-                    else
-                    {
-                        majorSegments.Add(new ScreenPoint(plotAreaLeft, transformedValue));
-                        majorSegments.Add(new ScreenPoint(plotAreaRight, transformedValue));
-                    }
+                    this.AddSegments(
+                        majorSegments, 
+                        perpAxes, 
+                        isHorizontal, 
+                        cropGridlines, 
+                        transformedValue, 
+                        plotAreaLeft, 
+                        plotAreaRight, 
+                        plotAreaTop, 
+                        plotAreaBottom);
                 }
 
                 if (axis.TickStyle != TickStyle.None && axis.MajorTickSize > 0)
@@ -352,7 +369,7 @@ namespace OxyPlot.Axes
                     continue;
                 }
 
-                if (axis.PositionAtZeroCrossing && Math.Abs(value) < eps)
+                if (dontRenderZero && Math.Abs(value) < eps)
                 {
                     continue;
                 }
@@ -409,23 +426,11 @@ namespace OxyPlot.Axes
                     va);
             }
 
-            // Draw the zero crossing line
-            if (axis.PositionAtZeroCrossing && this.ZeroPen != null && this.IsWithin(0, actualMinimum, actualMaximum))
-            {
-                double t0 = axis.Transform(0);
-                if (isHorizontal)
-                {
-                    this.RenderContext.DrawLine(t0, plotAreaTop, t0, plotAreaBottom, this.ZeroPen);
-                }
-                else
-                {
-                    this.RenderContext.DrawLine(plotAreaLeft, t0, plotAreaRight, t0, this.ZeroPen);
-                }
-            }
-
             // Draw extra grid lines
             if (axis.ExtraGridlines != null && this.ExtraPen != null)
             {
+                var extraSegments = new List<ScreenPoint>();
+
                 foreach (double value in axis.ExtraGridlines)
                 {
                     if (!this.IsWithin(value, actualMinimum, actualMaximum))
@@ -434,25 +439,19 @@ namespace OxyPlot.Axes
                     }
 
                     double transformedValue = axis.Transform(value);
-                    if (isHorizontal)
-                    {
-                        this.RenderContext.DrawLine(
-                            transformedValue,
-                            plotAreaTop,
-                            transformedValue,
-                            plotAreaBottom,
-                            this.ExtraPen);
-                    }
-                    else
-                    {
-                        this.RenderContext.DrawLine(
-                            plotAreaLeft,
-                            transformedValue,
-                            plotAreaRight,
-                            transformedValue,
-                            this.ExtraPen);
-                    }
+                    this.AddSegments(
+                        extraSegments,
+                        perpAxes,
+                        isHorizontal,
+                        cropGridlines,
+                        transformedValue,
+                        plotAreaLeft,
+                        plotAreaRight,
+                        plotAreaTop,
+                        plotAreaBottom);
                 }
+
+                this.RenderContext.DrawLineSegments(extraSegments, this.ExtraPen);
             }
 
             if (drawAxisLine)
@@ -504,12 +503,26 @@ namespace OxyPlot.Axes
             double plotAreaRight = this.Plot.PlotArea.Right;
             double plotAreaTop = this.Plot.PlotArea.Top;
             double plotAreaBottom = this.Plot.PlotArea.Bottom;
+            bool cropGridlines = axis.CropGridlines;
             bool isHorizontal = axis.IsHorizontal();
 
             double a0;
             double a1;
             var minorSegments = new List<ScreenPoint>();
             var minorTickSegments = new List<ScreenPoint>();
+
+            List<Axis> perpAxes = null;
+            if (cropGridlines)
+            {
+                if (isHorizontal)
+                {
+                    perpAxes = this.Plot.Axes.Where(x => x.IsXyAxis() && x.IsVertical()).ToList();
+                }
+                else
+                {
+                    perpAxes = this.Plot.Axes.Where(x => x.IsXyAxis() && x.IsHorizontal()).ToList();
+                }
+            }
 
             this.GetTickPositions(axis, axis.TickStyle, axis.MinorTickSize, axis.Position, out a0, out a1);
 
@@ -546,20 +559,16 @@ namespace OxyPlot.Axes
                 // Draw the minor grid line
                 if (this.MinorPen != null)
                 {
-                    if (isHorizontal)
-                    {
-                        minorSegments.Add(new ScreenPoint(transformedValue, plotAreaTop));
-                        minorSegments.Add(new ScreenPoint(transformedValue, plotAreaBottom));
-                    }
-                    else
-                    {
-                        if (transformedValue < plotAreaTop || transformedValue > plotAreaBottom)
-                        {
-                        }
-
-                        minorSegments.Add(new ScreenPoint(plotAreaLeft, transformedValue));
-                        minorSegments.Add(new ScreenPoint(plotAreaRight, transformedValue));
-                    }
+                    this.AddSegments(
+                        minorSegments,
+                        perpAxes,
+                        isHorizontal,
+                        cropGridlines,
+                        transformedValue,
+                        plotAreaLeft,
+                        plotAreaRight,
+                        plotAreaTop,
+                        plotAreaBottom);
                 }
 
                 // Draw the minor tick
@@ -587,6 +596,64 @@ namespace OxyPlot.Axes
             if (this.MinorTickPen != null)
             {
                 this.RenderContext.DrawLineSegments(minorTickSegments, this.MinorTickPen);
+            }
+        }
+
+        /// <summary>
+        /// Adds segments to <paramref name="segments"/> array. 
+        /// If <paramref name="cropGridlines"/> is true, then lines will be cropped with <paramref name="perpAxes"/> lists axes.
+        /// </summary>
+        /// <param name="segments">The target segments.</param>
+        /// <param name="perpAxes">Perpendicular axes list.</param>
+        /// <param name="isHorizontal">True, if current axis is horizontal.</param>
+        /// <param name="cropGridlines">True, if gridlines should be cropped.</param>
+        /// <param name="transformedValue">Starting point position.</param>
+        /// <param name="plotAreaLeft">Plot area left position.</param>
+        /// <param name="plotAreaRight">Plot area right position.</param>
+        /// <param name="plotAreaTop">Plot area top position.</param>
+        /// <param name="plotAreaBottom">Plot area bottom position.</param>
+        private void AddSegments(
+            List<ScreenPoint> segments, 
+            List<Axis> perpAxes,
+            bool isHorizontal,
+            bool cropGridlines,
+            double transformedValue,
+            double plotAreaLeft,
+            double plotAreaRight,
+            double plotAreaTop,
+            double plotAreaBottom)
+        {
+            if (isHorizontal)
+            {
+                if (!cropGridlines)
+                {
+                    segments.Add(new ScreenPoint(transformedValue, plotAreaTop));
+                    segments.Add(new ScreenPoint(transformedValue, plotAreaBottom));
+                }
+                else
+                {
+                    foreach (var perpAxis in perpAxes)
+                    {
+                        segments.Add(new ScreenPoint(transformedValue, perpAxis.Transform(perpAxis.ActualMinimum)));
+                        segments.Add(new ScreenPoint(transformedValue, perpAxis.Transform(perpAxis.ActualMaximum)));
+                    }
+                }
+            }
+            else
+            {
+                if (!cropGridlines)
+                {
+                    segments.Add(new ScreenPoint(plotAreaLeft, transformedValue));
+                    segments.Add(new ScreenPoint(plotAreaRight, transformedValue));
+                }
+                else
+                {
+                    foreach (var perpAxis in perpAxes)
+                    {
+                        segments.Add(new ScreenPoint(perpAxis.Transform(perpAxis.ActualMinimum), transformedValue));
+                        segments.Add(new ScreenPoint(perpAxis.Transform(perpAxis.ActualMaximum), transformedValue));
+                    }
+                }
             }
         }
 

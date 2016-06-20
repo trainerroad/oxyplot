@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Annotations\PointAnnotation.cs" />
     <Compile Include="Annotations\ShapeAnnotation.cs" />
+    <Compile Include="Axes\AxisUtilities.cs" />
     <Compile Include="Graphics\DelegateViewCommand{T}.cs" />
     <Compile Include="Graphics\ElementCollectionChangedEventArgs{T}.cs" />
     <Compile Include="Graphics\ManipulatorBase.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Graphics\IViewCommand{T}.cs" />
     <Compile Include="Graphics\IView.cs" />
     <Compile Include="PlotController\IPlotController.cs" />
+    <Compile Include="PlotController\Manipulators\TouchTrackerManipulator.cs" />
     <Compile Include="PlotModel\IPlotElement.cs" />
     <Compile Include="PlotModel\IPlotModel.cs" />
     <Compile Include="Rendering\OxySizeExtensions.cs" />
@@ -166,19 +168,19 @@
     <Compile Include="Series\ScatterErrorSeries.cs" />
     <Compile Include="Series\ScatterSeries{T}.cs" />
     <Compile Include="Series\ThreeColorLineSeries.cs" />
+    <Compile Include="Foundation\IExporter.cs" />
     <Compile Include="Utilities\ArrayExtensions.cs" />
     <Compile Include="Utilities\ComparerHelper.cs" />
-    <Compile Include="Utilities\EnumerableExtensions.cs" />
     <Compile Include="Utilities\HashCodeBuilder.cs" />
+    <Compile Include="Utilities\ListBuilder{T}.cs" />
     <Compile Include="Utilities\ReflectionPath.cs" />
     <Compile Include="Utilities\XmlWriterBase.cs" />
     <Compile Include="Utilities\BinaryReaderExtensions.cs" />
-    <Compile Include="Utilities\ListFiller.cs" />
     <Compile Include="Utilities\StreamExtensions.cs" />
     <Compile Include="Utilities\StringHelper.cs" />
     <Compile Include="Utilities\FractionHelper.cs" />
     <Compile Include="Utilities\ArrayBuilder.cs" />
-    <Compile Include="Utilities\ReflectionExtensions.cs" />
+    <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\Conrec.cs" />
     <Compile Include="Imaging\OxyImage.cs" />
     <Compile Include="Imaging\OxyImageInfo.cs" />
@@ -373,5 +375,3 @@
   </Target>
   -->
 </Project>
-
-

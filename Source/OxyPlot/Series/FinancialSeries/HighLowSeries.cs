@@ -213,7 +213,7 @@ namespace OxyPlot.Series
         /// <param name="pt">The point.</param>
         /// <param name="xaxis">The x axis.</param>
         /// <param name="yaxis">The y axis.</param>
-        /// <returns><c>true</c> if [is valid point] [the specified pt]; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if the specified point is valid; otherwise, <c>false</c>.</returns>
         public virtual bool IsValidItem(HighLowItem pt, Axis xaxis, Axis yaxis)
         {
             return !double.IsNaN(pt.X) && !double.IsInfinity(pt.X) && !double.IsNaN(pt.High)
@@ -328,13 +328,12 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        /// <param name="model">The model.</param>
-        protected internal override void SetDefaultValues(PlotModel model)
+        protected internal override void SetDefaultValues()
         {
             if (this.Color.IsAutomatic())
             {
-                this.LineStyle = model.GetDefaultLineStyle();
-                this.defaultColor = model.GetDefaultColor();
+                this.LineStyle = this.PlotModel.GetDefaultLineStyle();
+                this.defaultColor = this.PlotModel.GetDefaultColor();
             }
         }
 
@@ -361,13 +360,20 @@ namespace OxyPlot.Series
                 return;
             }
 
-            var filler = new ListFiller<HighLowItem>();
-            filler.Add(this.DataFieldX, (p, v) => p.X = Axis.ToDouble(v));
-            filler.Add(this.DataFieldHigh, (p, v) => p.High = Axis.ToDouble(v));
-            filler.Add(this.DataFieldLow, (p, v) => p.Low = Axis.ToDouble(v));
-            filler.Add(this.DataFieldOpen, (p, v) => p.Open = Axis.ToDouble(v));
-            filler.Add(this.DataFieldClose, (p, v) => p.Close = Axis.ToDouble(v));
-            filler.FillT(this.items, this.ItemsSource);
+            var sequenceOfHighLowItems = this.ItemsSource as IEnumerable<HighLowItem>;
+            if (sequenceOfHighLowItems != null)
+            {
+                this.items.AddRange(sequenceOfHighLowItems);
+                return;
+            }
+
+            var filler = new ListBuilder<HighLowItem>();
+            filler.Add(this.DataFieldX, double.NaN);
+            filler.Add(this.DataFieldHigh, double.NaN);
+            filler.Add(this.DataFieldLow, double.NaN);
+            filler.Add(this.DataFieldOpen, double.NaN);
+            filler.Add(this.DataFieldClose, double.NaN);
+            filler.FillT(this.items, this.ItemsSource, args => new HighLowItem(Axis.ToDouble(args[0]), Convert.ToDouble(args[1]), Convert.ToDouble(args[2]), Convert.ToDouble(args[3]), Convert.ToDouble(args[4])));
         }
 
         /// <summary>

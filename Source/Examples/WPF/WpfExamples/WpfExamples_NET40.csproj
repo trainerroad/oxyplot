@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{B86739B8-5DE9-406F-9418-0751BF7C166F}</ProjectGuid>
+    <ProjectGuid>{089A23D9-710F-4BD1-A520-B59702C998A3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WpfExamples</RootNamespace>
@@ -36,13 +36,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PropertyTools, Version=0.0.0.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\PropertyTools.Wpf.2013.1.17.1\lib\NET40\PropertyTools.dll</HintPath>
+    <Reference Include="PropertyTools, Version=2015.2.0.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\PropertyTools.Wpf.2015.2.0\lib\net40\PropertyTools.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="PropertyTools.Wpf, Version=2013.1.1.1, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\PropertyTools.Wpf.2013.1.17.1\lib\NET40\PropertyTools.Wpf.dll</HintPath>
+    <Reference Include="PropertyTools.Wpf, Version=2015.2.0.0, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\PropertyTools.Wpf.2015.2.0\lib\net40\PropertyTools.Wpf.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,6 +85,9 @@
     <Compile Include="Examples\BoxPlotSeriesDemo\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Examples\ScrollViewerDemo\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Examples\ToolTipDemo\MainViewModel.cs" />
     <Compile Include="Examples\ToolTipDemo\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -102,6 +105,11 @@
       <DependentUpon>PlotViewDataTemplateWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ScreenCapture.cs" />
+    <Compile Include="Workitems\PlotModelAlreadyInUse\Item.cs" />
+    <Compile Include="Workitems\PlotModelAlreadyInUse\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Workitems\PlotModelAlreadyInUse\ViewModel.cs" />
     <Page Include="Examples\AnnotationDemo\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -131,6 +139,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Examples\BoxPlotSeriesDemo\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Examples\ScrollViewerDemo\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -409,6 +421,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Workitems\PlotModelAlreadyInUse\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyDescription.cs">
@@ -424,6 +440,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Resource Include="Images\PlotModelAlreadyInUse.png" />
+    <Resource Include="Images\ScrollViewerDemo.png" />
     <Resource Include="Images\ControllerDemo.png" />
     <Resource Include="Images\ToolTipDemo.png" />
     <Resource Include="Images\LinearBarSeriesDemo.png" />
@@ -434,6 +452,7 @@
     <Resource Include="Images\PerformanceDemo.png" />
     <Resource Include="Images\ScatterErrorSeriesDemo.png" />
     <Resource Include="Images\ResizeDemo.png" />
+    <None Include="packages.config" />
     <None Include="ReadMe.txt" />
     <Resource Include="Images\HeatMapDemo.png" />
     <Resource Include="Images\ContextMenuDemo.png" />
@@ -477,7 +496,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -500,18 +518,11 @@
       <Project>{0D7C7710-C58B-4713-BA18-8231A2F35A12}</Project>
       <Name>OxyPlot.Wpf_NET40</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\OxyPlot.Xps\OxyPlot.Xps_NET40.csproj">
-      <Project>{87B7C658-12D9-4BD2-8FBB-9E4F2A670FB3}</Project>
-      <Name>OxyPlot.Xps_NET40</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\OxyPlot\OxyPlot_NET40.csproj">
       <Project>{1C1D9807-BE39-40A4-87DE-3F81E7C651E5}</Project>
       <Name>OxyPlot</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Workitems\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-

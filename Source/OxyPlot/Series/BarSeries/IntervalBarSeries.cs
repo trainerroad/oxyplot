@@ -324,12 +324,11 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        /// <param name="model">The model.</param>
-        protected internal override void SetDefaultValues(PlotModel model)
+        protected internal override void SetDefaultValues()
         {
             if (this.FillColor.IsAutomatic())
             {
-                this.defaultFillColor = model.GetDefaultColor();
+                this.defaultFillColor = this.PlotModel.GetDefaultColor();
             }
         }
 
@@ -351,10 +350,10 @@ namespace OxyPlot.Series
             {
                 this.Items.Clear();
 
-                var filler = new ListFiller<IntervalBarItem>();
-                filler.Add(this.MinimumField, (item, value) => item.Start = Convert.ToDouble(value));
-                filler.Add(this.MaximumField, (item, value) => item.End = Convert.ToDouble(value));
-                filler.FillT(this.Items, this.ItemsSource);
+                var filler = new ListBuilder<IntervalBarItem>();
+                filler.Add(this.MinimumField, double.NaN);
+                filler.Add(this.MaximumField, double.NaN);
+                filler.FillT(this.Items, this.ItemsSource, args => new IntervalBarItem() { Start = Convert.ToDouble(args[0]), End = Convert.ToDouble(args[1]) });
             }
         }
 

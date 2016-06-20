@@ -382,17 +382,16 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        /// <param name="model">The model.</param>
-        protected internal override void SetDefaultValues(PlotModel model)
+        protected internal override void SetDefaultValues()
         {
             if (this.MaximumFillColor.IsAutomatic())
             {
-                this.defaultMaximumFillColor = model.GetDefaultColor();
+                this.defaultMaximumFillColor = this.PlotModel.GetDefaultColor();
             }
 
             if (this.MinimumFillColor.IsAutomatic())
             {
-                this.defaultMinimumFillColor = model.GetDefaultColor();
+                this.defaultMinimumFillColor = this.PlotModel.GetDefaultColor();
             }
         }
 
@@ -414,10 +413,10 @@ namespace OxyPlot.Series
             {
                 this.Items.Clear();
 
-                var filler = new ListFiller<TornadoBarItem>();
-                filler.Add(this.MinimumField, (item, value) => item.Minimum = Convert.ToDouble(value));
-                filler.Add(this.MaximumField, (item, value) => item.Maximum = Convert.ToDouble(value));
-                filler.FillT(this.Items, this.ItemsSource);
+                var filler = new ListBuilder<TornadoBarItem>();
+                filler.Add(this.MinimumField, double.NaN);
+                filler.Add(this.MaximumField, double.NaN);
+                filler.FillT(this.Items, this.ItemsSource, args => new TornadoBarItem() { Minimum = Convert.ToDouble(args[0]), Maximum = Convert.ToDouble(args[1]) });
             }
         }
 

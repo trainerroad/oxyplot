@@ -87,10 +87,16 @@ namespace OxyPlot.Series
         {
             base.Render(rc);
 
+            var actualPoints = this.ActualPointsList;
+            if (actualPoints == null || actualPoints.Count == 0)
+            {
+                return;
+            }
+
             var clippingRectangle = this.GetClippingRect();
 
             var segments = new List<ScreenPoint>();
-            foreach (var point in this.ActualPointsList)
+            foreach (var point in actualPoints)
             {
                 if (point == null)
                 {
@@ -148,14 +154,19 @@ namespace OxyPlot.Series
         }
 
         /// <summary>
-        /// Defines the data fields used by the code that reflects on the <see cref="ItemsSeries.ItemsSource" />.
+        /// Updates from data fields.
         /// </summary>
-        /// <param name="filler">The list filler.</param>
-        protected override void DefineDataFields(ListFiller<ScatterErrorPoint> filler)
+        protected override void UpdateFromDataFields()
         {
-            base.DefineDataFields(filler);
-            filler.Add(this.DataFieldErrorX, (item, value) => item.ErrorX = Convert.ToDouble(value));
-            filler.Add(this.DataFieldErrorY, (item, value) => item.ErrorY = Convert.ToDouble(value));
+            var filler = new ListBuilder<ScatterErrorPoint>();
+            filler.Add(this.DataFieldX, double.NaN);
+            filler.Add(this.DataFieldY, double.NaN);
+            filler.Add(this.DataFieldErrorX, double.NaN);
+            filler.Add(this.DataFieldErrorY, double.NaN);
+            filler.Add(this.DataFieldSize, double.NaN);
+            filler.Add(this.DataFieldValue, double.NaN);
+            filler.Add(this.DataFieldTag, (object)null);
+            filler.FillT(this.ItemsSourcePoints, this.ItemsSource, args => new ScatterErrorPoint(Convert.ToDouble(args[0]), Convert.ToDouble(args[1]), Convert.ToDouble(args[2]), Convert.ToDouble(args[3]), Convert.ToDouble(args[4]), Convert.ToDouble(args[5]), args[6]));
         }
     }
 }

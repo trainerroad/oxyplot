@@ -57,6 +57,7 @@
     <Compile Include="Axes\LinearAxisTests.cs" />
     <Compile Include="Axes\TimeSpanAxisTests.cs" />
     <Compile Include="Foundation\CodeGeneratorTests.cs" />
+    <Compile Include="Foundation\OxyRectTests.cs" />
     <Compile Include="Graphics\ElementCollectionTests.cs" />
     <Compile Include="NullRenderContext.cs" />
     <Compile Include="PlotModelExtensions.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Foundation\OxyColorTests.cs" />
     <Compile Include="Foundation\OxySizeTests.cs" />
     <Compile Include="Utilities\ComparerHelperTests.cs" />
-    <Compile Include="Utilities\ListFillerTests.cs" />
+    <Compile Include="Utilities\ListBuilderTests.cs" />
     <Compile Include="Foundation\RenderingExtensionsTests.cs" />
     <Compile Include="Imaging\Deflate\DeflateStreamExtensions.cs" />
     <Compile Include="Imaging\Deflate\NayukiDeflateTests.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Foundation\CohenSutherlandClippingTests.cs" />
     <Compile Include="Foundation\SutherlandHodgmanClippingTests.cs" />
     <Compile Include="Foundation\ScreenPointHelperTests.cs" />
-    <Compile Include="Utilities\ReflectionExtensionsTests.cs" />
     <Compile Include="Foundation\OxyPaletteTests.cs" />
     <Compile Include="Utilities\FractionHelperTests.cs" />
     <Compile Include="Utilities\StringHelperTests.cs" />
@@ -152,5 +152,3 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
-
-
