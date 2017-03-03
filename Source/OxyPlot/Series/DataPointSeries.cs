@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
+
 namespace OxyPlot.Series
 {
     using System;
@@ -88,36 +90,46 @@ namespace OxyPlot.Series
         /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
-            if (interpolate && !this.CanTrackerInterpolatePoints)
+            try
             {
-                return null;
+                if (interpolate && !this.CanTrackerInterpolatePoints)
+                {
+                    return null;
+                }
+
+                TrackerHitResult result = null;
+                if (interpolate)
+                {
+                    result = this.GetNearestInterpolatedPointInternal(this.ActualPoints, point);
+                }
+
+                if (result == null)
+                {
+                    result = this.GetNearestPointInternal(this.ActualPoints, point);
+                }
+
+                if (result != null)
+                {
+                    result.Text = StringHelper.Format(
+                        this.ActualCulture,
+                        this.TrackerFormatString,
+                        result.Item,
+                        this.Title,
+                        this.XAxis.Title ?? XYAxisSeries.DefaultXAxisTitle,
+                        this.XAxis.GetValue(result.DataPoint.X),
+                        this.YAxis.Title ?? XYAxisSeries.DefaultYAxisTitle,
+                        this.YAxis.GetValue(result.DataPoint.Y));
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                //Catch excpetions thrown in GetNearestPointInternal which happens most often on Android. See #6491
+                Debug.WriteLine(ex);
             }
 
-            TrackerHitResult result = null;
-            if (interpolate)
-            {
-                result = this.GetNearestInterpolatedPointInternal(this.ActualPoints, point);
-            }
-
-            if (result == null)
-            {
-                result = this.GetNearestPointInternal(this.ActualPoints, point);
-            }
-
-            if (result != null)
-            {
-                result.Text = StringHelper.Format(
-                    this.ActualCulture, 
-                    this.TrackerFormatString,
-                    result.Item,
-                    this.Title,
-                    this.XAxis.Title ?? XYAxisSeries.DefaultXAxisTitle,
-                    this.XAxis.GetValue(result.DataPoint.X),
-                    this.YAxis.Title ?? XYAxisSeries.DefaultYAxisTitle,
-                    this.YAxis.GetValue(result.DataPoint.Y));
-            }
-
-            return result;
+            return null;
         }
 
         /// <summary>
