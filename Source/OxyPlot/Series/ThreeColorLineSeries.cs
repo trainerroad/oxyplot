@@ -156,28 +156,29 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        protected internal override void SetDefaultValues()
+        /// <param name="model">The model.</param>
+        protected internal override void SetDefaultValues(PlotModel model)
         {
-            base.SetDefaultValues();
+            base.SetDefaultValues(model);
 
             if (this.ColorLo.IsAutomatic())
             {
-                this.defaultColorLo = this.PlotModel.GetDefaultColor();
+                this.defaultColorLo = model.GetDefaultColor();
             }
 
             if (this.LineStyleLo == LineStyle.Automatic)
             {
-                this.LineStyleLo = this.PlotModel.GetDefaultLineStyle();
+                this.LineStyleLo = model.GetDefaultLineStyle();
             }
 
             if (this.ColorHi.IsAutomatic())
             {
-                this.defaultColorHi = this.PlotModel.GetDefaultColor();
+                this.defaultColorHi = model.GetDefaultColor();
             }
 
             if (this.LineStyleHi == LineStyle.Automatic)
             {
-                this.LineStyleHi = this.PlotModel.GetDefaultLineStyle();
+                this.LineStyleHi = model.GetDefaultLineStyle();
             }
         }
 
@@ -191,6 +192,7 @@ namespace OxyPlot.Series
         {
             var bottom = clippingRect.Bottom;
             var top = clippingRect.Top;
+            var height = clippingRect.Height;
 
             // todo: this does not work when y axis is reversed
             var yLo = this.YAxis.Transform(this.LimitLo);
@@ -216,7 +218,8 @@ namespace OxyPlot.Series
                 yHi = clippingRect.Bottom;
             }
 
-            clippingRect = new OxyRect(clippingRect.Left, yHi, clippingRect.Width, yLo - yHi);
+            clippingRect.Bottom = yLo;
+            clippingRect.Top = yHi;
 
             rc.DrawClippedLine(
                 clippingRect,
@@ -228,7 +231,8 @@ namespace OxyPlot.Series
                 this.LineJoin,
                 false);
 
-            clippingRect = new OxyRect(clippingRect.Left, yLo, clippingRect.Width, bottom - yLo);
+            clippingRect.Top = yLo;
+            clippingRect.Height = bottom - yLo;
 
             rc.DrawClippedLine(
                 clippingRect,
@@ -240,7 +244,8 @@ namespace OxyPlot.Series
                 this.LineJoin,
                 false);
 
-            clippingRect = new OxyRect(clippingRect.Left, top, clippingRect.Width, yHi - top);
+            clippingRect.Top = top;
+            clippingRect.Height = yHi - top;
 
             rc.DrawClippedLine(
                 clippingRect,

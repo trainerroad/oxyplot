@@ -370,7 +370,7 @@ namespace OxyPlot.Wpf
         /// <value>The marker resolution.</value>
         public int MarkerResolution
         {
-            get { return (int)this.GetValue(MarkerResolutionProperty); }
+            get { return (int)GetValue(MarkerResolutionProperty); }
             set { this.SetValue(MarkerResolutionProperty, value); }
         }
 

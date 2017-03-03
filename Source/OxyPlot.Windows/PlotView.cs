@@ -581,10 +581,10 @@ namespace OxyPlot.Windows
             }
 
             var args = new OxyKeyEventArgs
-            {
-                Key = e.Key.Convert(),
-                ModifierKeys = modifiers,
-            };
+                           {
+                               Key = e.Key.Convert(),
+                               ModifierKeys = modifiers,
+                           };
 
             e.Handled = this.ActualController.HandleKeyDown(this, args);
         }
@@ -692,12 +692,6 @@ namespace OxyPlot.Windows
 
                 e.Handled = this.ActualController.HandleMouseDown(this, e.ToMouseDownEventArgs(this));
             }
-            else if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
-            {
-                this.Focus(FocusState.Pointer);
-
-                e.Handled = this.ActualController.HandleTouchStarted(this, e.ToTouchEventArgs(this));
-            }
         }
 
         /// <summary>
@@ -717,8 +711,6 @@ namespace OxyPlot.Windows
             {
                 e.Handled = this.ActualController.HandleMouseMove(this, e.ToMouseEventArgs(this));
             }
-
-            // Note: don't handle touch here, this is also handled when moving over when a touch device
         }
 
         /// <summary>
@@ -738,10 +730,6 @@ namespace OxyPlot.Windows
             {
                 this.ReleasePointerCapture(e.Pointer);
                 e.Handled = this.ActualController.HandleMouseUp(this, e.ToMouseEventArgs(this));
-            }
-            else if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
-            {
-                e.Handled = this.ActualController.HandleTouchCompleted(this, e.ToTouchEventArgs(this));
             }
         }
 

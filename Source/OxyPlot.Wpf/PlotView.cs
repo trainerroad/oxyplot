@@ -9,6 +9,7 @@
 
 namespace OxyPlot.Wpf
 {
+    using System;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -22,7 +23,7 @@ namespace OxyPlot.Wpf
         /// Identifies the <see cref="Controller"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ControllerProperty =
-            DependencyProperty.Register("Controller", typeof(IPlotController), typeof(PlotView));
+            DependencyProperty.Register("Controller", typeof(IPlotController), typeof(PlotView), new PropertyMetadata(new PlotController()));
 
         /// <summary>
         /// Identifies the <see cref="Model"/> dependency property.
@@ -39,11 +40,6 @@ namespace OxyPlot.Wpf
         /// The current model (synchronized with the <see cref="Model" /> property, but can be accessed from all threads.
         /// </summary>
         private PlotModel currentModel;
-
-        /// <summary>
-        /// The default plot controller.
-        /// </summary>
-        private IPlotController defaultController;
 
         /// <summary>
         /// Initializes static members of the <see cref="PlotView" /> class.
@@ -108,7 +104,7 @@ namespace OxyPlot.Wpf
         {
             get
             {
-                return this.Controller ?? (this.defaultController ?? (this.defaultController = new PlotController()));
+                return this.Controller;
             }
         }
 

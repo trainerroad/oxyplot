@@ -22,18 +22,8 @@ namespace ControllerDemo
         /// </summary>
         public MainViewModel()
         {
-            // Set the Model property, the INotifyPropertyChanged event will make the WPF Plot control update its content
-            this.Model = CreatePlotModel("Custom PlotController", "Supports left/right keys only");
-            this.Controller = new CustomPlotController();
-
-            this.Model1 = CreatePlotModel("Default controller", null);
-            this.Model2 = CreatePlotModel("Default controller", "UnbindAll()");
-        }
-
-        private static PlotModel CreatePlotModel(string title, string subtitle)
-        {
             // Create the plot model
-            var tmp = new PlotModel { Title = title, Subtitle = subtitle};
+            var tmp = new PlotModel { Title = "Custom PlotController", Subtitle = "Supports left/right keys only" };
 
             // Create two line series (markers are hidden by default)
             var series1 = new LineSeries { Title = "Series 1", MarkerType = MarkerType.Circle };
@@ -55,15 +45,16 @@ namespace ControllerDemo
             tmp.Series.Add(series2);
 
             // Axes are created automatically if they are not defined
-            return tmp;
+
+            // Set the Model property, the INotifyPropertyChanged event will make the WPF Plot control update its content
+            this.Model = tmp;
+            this.Controller = new CustomPlotController();
         }
 
         /// <summary>
         /// Gets the plot model.
         /// </summary>
         public PlotModel Model { get; private set; }
-        public PlotModel Model1 { get; private set; }
-        public PlotModel Model2 { get; private set; }
 
         /// <summary>
         /// Gets the plot controller.

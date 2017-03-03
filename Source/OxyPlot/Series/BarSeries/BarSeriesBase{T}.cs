@@ -9,6 +9,7 @@
 
 namespace OxyPlot.Series
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -19,6 +20,11 @@ namespace OxyPlot.Series
     public abstract class BarSeriesBase<T> : BarSeriesBase
         where T : BarItemBase, new()
     {
+        /// <summary>
+        /// The items from the items source.
+        /// </summary>
+        private List<T> itemsSourceItems;
+
         /// <summary>
         /// Specifies if the ownsItemsSourceItems list can be modified.
         /// </summary>
@@ -45,14 +51,9 @@ namespace OxyPlot.Series
         {
             get
             {
-                return this.ItemsSource != null ? this.ItemsSourceItems : this.Items;
+                return this.ItemsSource != null ? this.itemsSourceItems : this.Items;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the items from the items source.
-        /// </summary>
-        protected List<T> ItemsSourceItems { get; set; }
 
         /// <summary>
         /// Gets the items of this series.
@@ -76,7 +77,7 @@ namespace OxyPlot.Series
             var sourceAsListOfT = this.ItemsSource as List<T>;
             if (sourceAsListOfT != null)
             {
-                this.ItemsSourceItems = sourceAsListOfT;
+                this.itemsSourceItems = sourceAsListOfT;
                 this.ownsItemsSourceItems = false;
                 return;
             }
@@ -85,18 +86,17 @@ namespace OxyPlot.Series
 
             if (this.ValueField == null)
             {
-                this.ItemsSourceItems.AddRange(this.ItemsSource.OfType<T>());
+                this.itemsSourceItems.AddRange(this.ItemsSource.OfType<T>());
             }
             else
             {
-                this.UpdateFromDataFields();
+                // Using reflection to add items by value and color (optional)
+                var filler = new ListFiller<T>();
+                filler.Add(this.ValueField, (item, value) => item.Value = Convert.ToDouble(value));
+                filler.Add(this.ColorField, (item, value) => item.Color = (OxyColor)value);
+                filler.Fill(this.itemsSourceItems, this.ItemsSource);
             }
         }
-
-        /// <summary>
-        /// Updates the <see cref="F:itemsSourceItems" /> from the <see cref="P:ItemsSource" /> and data fields.
-        /// </summary>
-        protected abstract void UpdateFromDataFields();
 
         /// <summary>
         /// Gets the item at the specified index.
@@ -114,17 +114,17 @@ namespace OxyPlot.Series
         }
 
         /// <summary>
-        /// Clears or creates the <see cref="ItemsSourceItems"/> list.
+        /// Clears or creates the <see cref="itemsSourceItems"/> list.
         /// </summary>
         private void ClearItemsSourceItems()
         {
-            if (!this.ownsItemsSourceItems || this.ItemsSourceItems == null)
+            if (!this.ownsItemsSourceItems || this.itemsSourceItems == null)
             {
-                this.ItemsSourceItems = new List<T>();
+                this.itemsSourceItems = new List<T>();
             }
             else
             {
-                this.ItemsSourceItems.Clear();
+                this.itemsSourceItems.Clear();
             }
 
             this.ownsItemsSourceItems = true;

@@ -7,6 +7,7 @@
 namespace LegendsDemo
 {
     using System;
+    using System.ComponentModel;
 
     using OxyPlot;
     using OxyPlot.Series;
@@ -18,138 +19,116 @@ namespace LegendsDemo
 
     public class MainViewModel : Observable
     {
-        private HorizontalAlignment legendItemAlignment = HorizontalAlignment.Left;
+        private HorizontalAlignment legendItemAlignment;
         private LegendItemOrder legendItemOrder;
         private LegendOrientation legendOrientation;
         private LegendPlacement legendPlacement;
         private LegendPosition legendPosition;
         private LegendSymbolPlacement legendSymbolPlacement;
         private PlotModel model;
-        private int numberOfSeries = 20;
-        private double maxHeight = double.NaN;
-        private double maxWidth = double.NaN;
+        private int numberOfSeries;
 
         public MainViewModel()
         {
-            this.PropertiesChanged();
+            NumberOfSeries = 20;
+            LegendItemAlignment = HorizontalAlignment.Left;
+            PropertiesChanged();
         }
 
         [DisplayName("Position"), Category("Legend properties")]
         public LegendPosition LegendPosition
         {
-            get { return this.legendPosition; }
+            get { return legendPosition; }
             set
             {
-                this.SetValue(ref this.legendPosition, value, () => this.LegendPosition);
-                this.PropertiesChanged();
+                legendPosition = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("Placement")]
         public LegendPlacement LegendPlacement
         {
-            get { return this.legendPlacement; }
+            get { return legendPlacement; }
             set
             {
-                this.SetValue(ref this.legendPlacement, value, () => this.LegendPlacement);
-                this.PropertiesChanged();
+                legendPlacement = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("Orientation")]
         public LegendOrientation LegendOrientation
         {
-            get { return this.legendOrientation; }
+            get { return legendOrientation; }
             set
             {
-                this.SetValue(ref this.legendOrientation, value, () => this.LegendOrientation);
-                this.PropertiesChanged();
+                legendOrientation = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("ItemOrder")]
         public LegendItemOrder LegendItemOrder
         {
-            get { return this.legendItemOrder; }
+            get { return legendItemOrder; }
             set
             {
-                this.SetValue(ref this.legendItemOrder, value, () => this.LegendItemOrder);
-                this.PropertiesChanged();
+                legendItemOrder = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("ItemAlignment")]
         public HorizontalAlignment LegendItemAlignment
         {
-            get { return this.legendItemAlignment; }
+            get { return legendItemAlignment; }
             set
             {
-                this.SetValue(ref this.legendItemAlignment, value, () => this.LegendItemAlignment);
-                this.PropertiesChanged();
+                legendItemAlignment = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("SymbolPlacement")]
         public LegendSymbolPlacement LegendSymbolPlacement
         {
-            get { return this.legendSymbolPlacement; }
+            get { return legendSymbolPlacement; }
             set
             {
-                this.SetValue(ref this.legendSymbolPlacement, value, () => this.LegendSymbolPlacement);
-                this.PropertiesChanged();
-            }
-        }
-
-        [DisplayName("MaxWidth"), Optional]
-        public double LegendMaxWidth
-        {
-            get { return this.maxWidth; }
-            set
-            {
-                this.SetValue(ref this.maxWidth, value, () => this.LegendMaxWidth);
-                this.PropertiesChanged();
-            }
-        }
-
-        [DisplayName("MaxHeight"), Optional]
-        public double LegendMaxHeight
-        {
-            get { return this.maxHeight; }
-            set
-            {
-                this.SetValue(ref this.maxHeight, value, () => this.LegendMaxHeight);
-                this.PropertiesChanged();
+                legendSymbolPlacement = value;
+                PropertiesChanged();
             }
         }
 
         [DisplayName("Curves"), Slidable(1, 32)]
         public int NumberOfSeries
         {
-            get { return this.numberOfSeries; }
+            get { return numberOfSeries; }
             set
             {
-                this.SetValue(ref this.numberOfSeries, value, () => this.NumberOfSeries);
-                this.PropertiesChanged();
+                numberOfSeries = value;
+                PropertiesChanged();
             }
         }
 
         [Browsable(false)]
         public PlotModel Model
         {
-            get { return this.model; }
+            get { return model; }
             set
             {
-                if (this.model != value)
+                if (model != value)
                 {
-                    this.model = value;
-                    this.RaisePropertyChanged(() => this.Model);
+                    model = value;
+                    RaisePropertyChanged(() => Model);
                 }
             }
         }
 
         private void PropertiesChanged()
         {
-            this.Model = this.CreateModel(this.NumberOfSeries);
+            Model = CreateModel(NumberOfSeries);
         }
 
         private PlotModel CreateModel(int n)
@@ -159,14 +138,12 @@ namespace LegendsDemo
                 Title = "LineSeries",
                 LegendBorder = OxyColors.Black,
                 LegendBackground = OxyColor.FromAColor(200, OxyColors.White),
-                LegendPosition = this.LegendPosition,
-                LegendPlacement = this.LegendPlacement,
-                LegendOrientation = this.LegendOrientation,
-                LegendItemOrder = this.LegendItemOrder,
-                LegendItemAlignment = this.LegendItemAlignment,
-                LegendSymbolPlacement = this.LegendSymbolPlacement,
-                LegendMaxWidth = this.LegendMaxWidth,
-                LegendMaxHeight = this.LegendMaxHeight
+                LegendPosition = LegendPosition,
+                LegendPlacement = LegendPlacement,
+                LegendOrientation = LegendOrientation,
+                LegendItemOrder = LegendItemOrder,
+                LegendItemAlignment = LegendItemAlignment,
+                LegendSymbolPlacement = LegendSymbolPlacement
             };
 
             for (int i = 1; i <= n; i++)

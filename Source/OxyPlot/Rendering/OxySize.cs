@@ -16,22 +16,12 @@ namespace OxyPlot
     /// <summary>
     /// Describes the size of an object.
     /// </summary>
-    public struct OxySize : IFormattable, IEquatable<OxySize>
+    public struct OxySize : IFormattable
     {
         /// <summary>
         /// Empty Size.
         /// </summary>
-        public static readonly OxySize Empty = new OxySize(0, 0);
-
-        /// <summary>
-        /// The height
-        /// </summary>
-        private readonly double height;
-
-        /// <summary>
-        /// The width
-        /// </summary>
-        private readonly double width;
+        public static OxySize Empty = new OxySize(0, 0);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OxySize" /> struct.
@@ -39,34 +29,23 @@ namespace OxyPlot
         /// <param name="width">The width.</param>
         /// <param name="height">The height.</param>
         public OxySize(double width, double height)
+            : this()
         {
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
         }
 
         /// <summary>
-        /// Gets the height.
+        /// Gets or sets the height.
         /// </summary>
         /// <value>The height.</value>
-        public double Height
-        {
-            get
-            {
-                return this.height;
-            }
-        }
+        public double Height { get; set; }
 
         /// <summary>
-        /// Gets the width.
+        /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
-        public double Width
-        {
-            get
-            {
-                return this.width;
-            }
-        }
+        public double Width { get; set; }
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -95,16 +74,6 @@ namespace OxyPlot
             builder.Append(this.Height.ToString(format, formatProvider));
             builder.Append(")");
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// Determines whether this instance and another specified <see cref="T:OxySize" /> object have the same value.
-        /// </summary>
-        /// <param name="other">The size to compare to this instance.</param>
-        /// <returns><c>true</c> if the value of the <paramref name="other" /> parameter is the same as the value of this instance; otherwise, <c>false</c>.</returns>
-        public bool Equals(OxySize other)
-        {
-            return this.Width.Equals(other.Width) && this.Height.Equals(other.Height);
         }
     }
 }

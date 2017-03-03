@@ -25,8 +25,6 @@ namespace OxyPlot.Tests
         {
             var item = new Item();
             var rp = new ReflectionPath("SubItem");
-            object result;
-            Assert.IsTrue(rp.TryGetValue(item, out result));
             Assert.That(rp.GetValue(item), Is.Null);
         }
 
@@ -38,8 +36,6 @@ namespace OxyPlot.Tests
         {
             var item = new Item();
             var rp = new ReflectionPath("SubItem.X");
-            object result;
-            Assert.IsTrue(rp.TryGetValue(item, out result));
             Assert.That(rp.GetValue(item), Is.Null);
         }
 
@@ -51,8 +47,6 @@ namespace OxyPlot.Tests
         {
             var item = new Item { Number = 41 };
             var rp = new ReflectionPath("Number");
-            object result;
-            Assert.IsTrue(rp.TryGetValue(item, out result));
             Assert.That(rp.GetValue(item), Is.EqualTo(41));
         }
 
@@ -64,8 +58,6 @@ namespace OxyPlot.Tests
         {
             var item = new Item { Point = new DataPoint(1, 2) };
             var rp = new ReflectionPath("Point.X");
-            object result;
-            Assert.IsTrue(rp.TryGetValue(item, out result));
             Assert.That(rp.GetValue(item), Is.EqualTo(1));
         }
 
@@ -105,8 +97,6 @@ namespace OxyPlot.Tests
         {
             var item = new Item { Point = new DataPoint(1, 2) };
             var rp = new ReflectionPath("Point.Z");
-            object result;
-            Assert.IsFalse(rp.TryGetValue(item, out result));
             Assert.Throws<InvalidOperationException>(() => rp.GetValue(item));
         }
 

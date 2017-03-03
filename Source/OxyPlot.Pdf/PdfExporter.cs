@@ -14,7 +14,7 @@ namespace OxyPlot.Pdf
     /// <summary>
     /// Provides functionality to export plots to pdf.
     /// </summary>
-    public class PdfExporter : IExporter
+    public class PdfExporter
     {
         /// <summary>
         /// Gets or sets the width (in points, 1/72 inch) of the output document.
@@ -40,7 +40,7 @@ namespace OxyPlot.Pdf
         /// <param name="height">The height (points).</param>
         public static void Export(IPlotModel model, string path, double width, double height)
         {
-            using (var s = File.OpenWrite(path))
+            using (var s = File.Create(path))
             {
                 Export(model, s, width, height);
             }

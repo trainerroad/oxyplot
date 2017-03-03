@@ -193,29 +193,24 @@ namespace OxyPlot.Axes
                     double ymax = this.Transform(this.ActualMaximum);
                     double ymin = this.Transform(this.ActualMinimum);
 
-                    if (this.IsHorizontal())
+                    if (ylow < ymax)
                     {
-                        if (ylow < ymin)
-                        {
-                            ylow = ymin;
-                        }
-
-                        if (yhigh > ymax)
-                        {
-                            yhigh = ymax;
-                        }
+                        continue;
                     }
-                    else
-                    {
-                        if (ylow > ymin)
-                        {
-                            ylow = ymin;
-                        }
 
-                        if (yhigh < ymax)
-                        {
-                            yhigh = ymax;
-                        }
+                    if (yhigh > ymin)
+                    {
+                        continue;
+                    }
+
+                    if (ylow > ymin)
+                    {
+                        ylow = ymin;
+                    }
+
+                    if (yhigh < ymax)
+                    {
+                        yhigh = ymax;
                     }
 
                     drawColorRect(ylow, yhigh, range.Color);

@@ -51,29 +51,6 @@ namespace ExampleLibrary
             return CreateTickStyleExample(TickStyle.Outside);
         }
 
-        [Example("TickStyle: Color major and minor ticks differently")]
-        public static PlotModel TickLineColor()
-        {
-            var plotModel1 = new PlotModel { Title = "Color major and minor ticks differently" };
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                MajorGridlineThickness = 3,
-                MinorGridlineThickness = 3,
-                TicklineColor = OxyColors.Blue,
-                MinorTicklineColor = OxyColors.Gray,
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Bottom,
-                MajorGridlineThickness = 3,
-                MinorGridlineThickness = 3,
-                TicklineColor = OxyColors.Blue,
-                MinorTicklineColor = OxyColors.Gray,
-            });
-            return plotModel1;
-        }
-
         [Example("GridLinestyle: None (default)")]
         public static PlotModel GridlineStyleNone()
         {
@@ -205,7 +182,6 @@ namespace ExampleLibrary
                 Maximum = 50,
                 Minimum = -30,
                 PositionAtZeroCrossing = true,
-                AxislineStyle = LineStyle.Solid,
                 TickStyle = TickStyle.Crossing
             });
             plotModel1.Axes.Add(new LinearAxis
@@ -214,58 +190,7 @@ namespace ExampleLibrary
                 Minimum = -50,
                 Position = AxisPosition.Bottom,
                 PositionAtZeroCrossing = true,
-                AxislineStyle = LineStyle.Solid,
                 TickStyle = TickStyle.Crossing
-            });
-            return plotModel1;
-        }
-
-        [Example("Horizontal zero crossing axis")]
-        public static PlotModel HorizontalZeroCrossing()
-        {
-            var plotModel1 = new PlotModel
-            {
-                Title = "Bottom axis: PositionAtZeroCrossing = true"
-            };
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Maximum = 50,
-                Minimum = -30,
-                Position = AxisPosition.Left,
-                PositionAtZeroCrossing = false,
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Maximum = 70,
-                Minimum = -50,
-                Position = AxisPosition.Bottom,
-                PositionAtZeroCrossing = true,
-                AxislineStyle = LineStyle.Solid,
-            });
-            return plotModel1;
-        }
-
-        [Example("Vertical zero crossing axis")]
-        public static PlotModel VerticalZeroCrossing()
-        {
-            var plotModel1 = new PlotModel
-            {
-                Title = "Left axis: PositionAtZeroCrossing = true"
-            };
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Maximum = 50,
-                Minimum = -30,
-                Position = AxisPosition.Left,
-                PositionAtZeroCrossing = true,
-                AxislineStyle = LineStyle.Solid,
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                Maximum = 70,
-                Minimum = -50,
-                Position = AxisPosition.Bottom,
-                PositionAtZeroCrossing = false,
             });
             return plotModel1;
         }
@@ -591,29 +516,16 @@ namespace ExampleLibrary
             return model;
         }
 
-        [Example("MinimumRange")]
-        public static PlotModel MinimumRange()
+        [Example("MinimumRange with Minimum")]
+        public static PlotModel MinimumRangeWithMinimum()
         {
-            var model = new PlotModel { Title = "MinimumRange = 400" };
+            var model = new PlotModel { Title = "MinimumRange of 5 with a Minimum of 0", Subtitle = "Should show a range from 0 to 5" };
             model.Axes.Add(
                 new LinearAxis
                 {
                     Position = AxisPosition.Left,
-                    MinimumRange = 400
-                });
-
-            return model;
-        }
-
-        [Example("MaximumRange")]
-        public static PlotModel MaximumRange()
-        {
-            var model = new PlotModel { Title = "MaximumRange = 40" };
-            model.Axes.Add(
-                new LinearAxis
-                {
-                    Position = AxisPosition.Left,
-                    MaximumRange = 40
+                    Minimum = 0,
+                    MinimumRange = 5
                 });
 
             return model;
@@ -1111,34 +1023,6 @@ namespace ExampleLibrary
             return plotModel1;
         }
 
-        [Example("MinimumMajorStep")]
-        public static PlotModel MinimumMajorStep()
-        {
-            var model = new PlotModel
-            {
-                Title = "Axes with MinimumMajorStep"
-            };
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "MinimuMajorStep = 1", Minimum = 0, Maximum = 2, MinimumMajorStep = 1 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "MinimuMajorStep = 10", Minimum = 0, Maximum = 15, MinimumMajorStep = 10 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Top, Title = "MinimuMajorStep = 0 (default)", Minimum = 0, Maximum = 2 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Right, Title = "MinimuMajorStep = 0 (default)", Minimum = 0, Maximum = 15 });
-            return model;
-        }
-
-        [Example("MinimumMinorStep")]
-        public static PlotModel MinimumMinorStep()
-        {
-            var model = new PlotModel
-            {
-                Title = "Axes with MinimumMinorStep"
-            };
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "MinimumMinorStep = 1", Minimum = 0, Maximum = 20, MinimumMinorStep = 1 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "MinimumMinorStep = 10", Minimum = 0, Maximum = 150, MinimumMinorStep = 10 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Top, Title = "MinimumMinorStep = 0 (default)", Minimum = 0, Maximum = 20 });
-            model.Axes.Add(new LinearAxis { Position = AxisPosition.Right, Title = "MinimumMinorStep = 0 (default)", Minimum = 0, Maximum = 150 });
-            return model;
-        }
-
         /// <summary>
         /// Creates an example with the specified <see cref="TickStyle" />.
         /// </summary>
@@ -1149,55 +1033,6 @@ namespace ExampleLibrary
             var plotModel1 = new PlotModel { Title = "TickStyle = " + tickStyle };
             plotModel1.Axes.Add(new LinearAxis { Position = AxisPosition.Left, TickStyle = tickStyle });
             plotModel1.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, TickStyle = tickStyle });
-            return plotModel1;
-        }
-        
-        [Example("Gridlines Cropping: Horizontal and vertical")]
-        public static PlotModel GridlineCroppingBoth()
-        {
-            var plotModel1 = new PlotModel { Title = "Gridline cropping" };
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                ExtraGridlines = new double[] { 46d },
-                ExtraGridlineColor = OxyColors.Red,
-                StartPosition = 0.1,
-                EndPosition = 0.4,
-                CropGridlines = true
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                ExtraGridlines = new double[] { 46d },
-                ExtraGridlineColor = OxyColors.Red,
-                StartPosition = 0.6,
-                EndPosition = 0.9,
-                CropGridlines = true
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                Position = AxisPosition.Bottom,
-                ExtraGridlines = new double[] { 46d },
-                ExtraGridlineColor = OxyColors.Red,
-                StartPosition = 0.1,
-                EndPosition = 0.4,
-                CropGridlines = true
-            });
-            plotModel1.Axes.Add(new LinearAxis
-            {
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                Position = AxisPosition.Bottom,
-                ExtraGridlines = new double[] { 46d },
-                ExtraGridlineColor = OxyColors.Red,
-                StartPosition = 0.6,
-                EndPosition = 0.9,
-                CropGridlines = true                
-            });
             return plotModel1;
         }
     }

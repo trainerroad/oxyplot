@@ -2,14 +2,14 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>OxyPlot.GtkSharp3</id>
-    <title>OxyPlot for GTK# 3</title>
+    <title>OxyPlot for GTK#</title>
     <version>$version$</version>
     <authors>Oystein Bjorke</authors>
-    <description>OxyPlot is a plotting library for .NET. This package targets applications based on GTK# version 3.</description>
+    <description>OxyPlot is a plotting library for .NET. This package targets applications based on GTK#.</description>
     <releaseNotes></releaseNotes>
     <licenseUrl>https://raw.githubusercontent.com/oxyplot/oxyplot/master/LICENSE</licenseUrl>
     <projectUrl>http://oxyplot.org/</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/oxyplot/oxyplot/develop/Icons/OxyPlot_128.png</iconUrl>
+    <iconUrl>http://resources.oxyplot.org/icons/oxyplot_128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>gtk gtk# plotting plot charting chart</tags>
     <dependencies>

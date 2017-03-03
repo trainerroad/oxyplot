@@ -113,9 +113,9 @@ namespace OxyPlot.Wpf
                     yield return axis;
                 }
 
-                foreach (var s in this.Series)
+                foreach (var series in this.Series)
                 {
-                    yield return s;
+                    yield return series;
                 }
             }
         }
@@ -263,7 +263,6 @@ namespace OxyPlot.Wpf
             m.LegendItemSpacing = this.LegendItemSpacing;
             m.LegendLineSpacing = this.LegendLineSpacing;
             m.LegendMargin = this.LegendMargin;
-            m.LegendMaxHeight = this.LegendMaxHeight;
             m.LegendMaxWidth = this.LegendMaxWidth;
 
             m.LegendBackground = this.LegendBackground.ToOxyColor();

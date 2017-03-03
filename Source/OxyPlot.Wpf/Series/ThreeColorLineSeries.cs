@@ -170,7 +170,7 @@ namespace OxyPlot.Wpf
         protected override void SynchronizeProperties(OxyPlot.Series.Series series)
         {
             base.SynchronizeProperties(series);
-            var s = (OxyPlot.Series.ThreeColorLineSeries)series;
+            var s = series as OxyPlot.Series.ThreeColorLineSeries;
             s.LimitLo = this.LimitLo;
             s.ColorLo = this.ColorLo.ToOxyColor();
             s.LimitHi = this.LimitHi;

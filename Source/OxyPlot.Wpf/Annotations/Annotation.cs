@@ -28,24 +28,6 @@ namespace OxyPlot.Wpf
             new PropertyMetadata(AnnotationLayer.AboveSeries, AppearanceChanged));
 
         /// <summary>
-        /// Identifies the <see cref="XAxisKey"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty XAxisKeyProperty = DependencyProperty.Register(
-            "XAxisKey",
-            typeof(string),
-            typeof(Annotation),
-            new PropertyMetadata(null, AppearanceChanged));
-
-        /// <summary>
-        /// Identifies the <see cref="YAxisKey"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty YAxisKeyProperty = DependencyProperty.Register(
-            "YAxisKey",
-            typeof(string),
-            typeof(Annotation),
-            new PropertyMetadata(null, AppearanceChanged));
-
-        /// <summary>
         /// Gets or sets the rendering layer of the annotation. The default value is <see cref="AnnotationLayer.AboveSeries" />.
         /// </summary>
         public AnnotationLayer Layer
@@ -58,38 +40,6 @@ namespace OxyPlot.Wpf
             set
             {
                 this.SetValue(LayerProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the X axis key.
-        /// </summary>
-        public string XAxisKey
-        {
-            get
-            {
-                return (string)this.GetValue(XAxisKeyProperty);
-            }
-
-            set
-            {
-                this.SetValue(XAxisKeyProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Y axis key.
-        /// </summary>
-        public string YAxisKey
-        {
-            get
-            {
-                return (string)this.GetValue(YAxisKeyProperty);
-            }
-
-            set
-            {
-                this.SetValue(YAxisKeyProperty, value);
             }
         }
 
@@ -111,8 +61,6 @@ namespace OxyPlot.Wpf
         {
             var a = this.InternalAnnotation;
             a.Layer = this.Layer;
-            a.XAxisKey = this.XAxisKey;
-            a.YAxisKey = this.YAxisKey;
         }
 
         /// <summary>

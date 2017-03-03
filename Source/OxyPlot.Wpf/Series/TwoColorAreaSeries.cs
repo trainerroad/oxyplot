@@ -120,7 +120,7 @@ namespace OxyPlot.Wpf
         protected override void SynchronizeProperties(OxyPlot.Series.Series series)
         {
             base.SynchronizeProperties(series);
-            var s = (OxyPlot.Series.TwoColorAreaSeries)series;            
+            var s = series as OxyPlot.Series.TwoColorAreaSeries;            
             s.Fill = this.Fill.ToOxyColor();
             s.Fill2 = this.Fill2.ToOxyColor();
             s.MarkerFill2 = this.MarkerFill2.ToOxyColor();

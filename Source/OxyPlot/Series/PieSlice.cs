@@ -12,16 +12,24 @@ namespace OxyPlot.Series
     /// <summary>
     /// Represent a slice of a <see cref="PieSeries" />.
     /// </summary>
-    public class PieSlice : ICodeGenerating
+    public class PieSlice
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref = "PieSlice" /> class.
+        /// </summary>
+        public PieSlice()
+        {
+            this.Fill = OxyColors.Automatic;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PieSlice" /> class.
         /// </summary>
         /// <param name="label">The label.</param>
         /// <param name="value">The value.</param>
         public PieSlice(string label, double value)
+            : this()
         {
-            this.Fill = OxyColors.Automatic;
             this.Label = label;
             this.Value = value;
         }
@@ -46,29 +54,19 @@ namespace OxyPlot.Series
         public bool IsExploded { get; set; }
 
         /// <summary>
-        /// Gets the label.
+        /// Gets or sets the label.
         /// </summary>
-        public string Label { get; private set; }
+        public string Label { get; set; }
 
         /// <summary>
-        /// Gets the value.
+        /// Gets or sets the value.
         /// </summary>
-        public double Value { get; private set; }
+        public double Value { get; set; }
 
         /// <summary>
         /// Gets or sets the default fill color.
         /// </summary>
         /// <value>The default fill color.</value>
         internal OxyColor DefaultFillColor { get; set; }
-
-        /// <summary>
-        /// Returns C# code that generates this instance.
-        /// </summary>
-        /// <returns>C# code.</returns>
-        public string ToCode()
-        {
-            return CodeGenerator.FormatConstructor(
-                this.GetType(), "{0}, {1}", this.Label, this.Value);
-        }
     }
 }

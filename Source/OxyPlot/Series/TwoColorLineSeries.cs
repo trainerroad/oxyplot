@@ -91,18 +91,19 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        protected internal override void SetDefaultValues()
+        /// <param name="model">The model.</param>
+        protected internal override void SetDefaultValues(PlotModel model)
         {
-            base.SetDefaultValues();
+            base.SetDefaultValues(model);
 
             if (this.Color2.IsAutomatic())
             {
-                this.defaultColor2 = this.PlotModel.GetDefaultColor();
+                this.defaultColor2 = model.GetDefaultColor();
             }
 
             if (this.LineStyle2 == LineStyle.Automatic)
             {
-                this.LineStyle2 = this.PlotModel.GetDefaultLineStyle();
+                this.LineStyle2 = model.GetDefaultLineStyle();
             }
         }
 
@@ -132,7 +133,7 @@ namespace OxyPlot.Series
             var dashArray = this.ActualDashArray;
             var dashArray2 = this.ActualDashArray2;
 
-            clippingRect = new OxyRect(clippingRect.Left, clippingRect.Top, clippingRect.Width, y - clippingRect.Top);
+            clippingRect.Bottom = y;
             rc.DrawClippedLine(
                 clippingRect,
                 pointsToRender,
@@ -142,7 +143,8 @@ namespace OxyPlot.Series
                 dashArray,
                 this.LineJoin,
                 false);
-            clippingRect = new OxyRect(clippingRect.Left, y, clippingRect.Width, bottom - y);
+            clippingRect.Top = y;
+            clippingRect.Height = bottom - y;
             rc.DrawClippedLine(
                 clippingRect,
                 pointsToRender,

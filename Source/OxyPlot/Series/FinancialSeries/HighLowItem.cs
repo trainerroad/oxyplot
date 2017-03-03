@@ -9,10 +9,12 @@
 
 namespace OxyPlot.Series
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents an item in a <see cref="HighLowSeries" />.
     /// </summary>
-    public class HighLowItem : ICodeGenerating
+    public class HighLowItem
     {
         /// <summary>
         /// The undefined.
@@ -84,13 +86,73 @@ namespace OxyPlot.Series
         public double X { get; set; }
 
         /// <summary>
-        /// Returns C# code that generates this instance.
+        /// Find index of max(x) &lt;= target x in a list of OHLC items
         /// </summary>
-        /// <returns>The C# code.</returns>
-        public string ToCode()
+        /// <param name='items'>
+        /// vector of bars
+        /// </param>
+        /// <param name='targetX'>
+        /// target x.
+        /// </param>
+        /// <param name='guess'>
+        /// initial guess index.
+        /// </param>
+        /// <returns>
+        /// index of x with max(x) &lt;= target x or -1 if cannot find
+        /// </returns>
+        public static int FindIndex(List<HighLowItem> items, double targetX, int guess)
         {
-            return CodeGenerator.FormatConstructor(
-                this.GetType(), "{0},{1},{2},{3},{4}", this.X, this.High, this.Low, this.Open, this.Close);
+            int lastguess = 0;
+            int start = 0;
+            int end = items.Count - 1;
+
+            while (start <= end)
+            {
+                if (guess < start)
+                {
+                    return lastguess;
+                }
+                else if (guess > end)
+                {
+                    return end;
+                }
+
+                var guessX = items[guess].X;
+                if (guessX.Equals(targetX))
+                {
+                    return guess;
+                }
+                else if (guessX > targetX)
+                {
+                    end = guess - 1;
+                    if (end < start)
+                    {
+                        return lastguess;
+                    }
+                    else if (end == start)
+                    {
+                        return end;
+                    }
+                }
+                else
+                { 
+                    start = guess + 1; 
+                    lastguess = guess; 
+                }
+
+                if (start >= end)
+                {
+                    return lastguess;
+                }
+
+                var endX = items[end].X;
+                var startX = items[start].X;
+
+                var m = (end - start + 1) / (endX - startX);
+                guess = start + (int)((targetX - startX) * m);
+            }
+
+            return lastguess;
         }
     }
 }

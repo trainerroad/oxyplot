@@ -139,7 +139,6 @@ namespace OxyPlot.Pdf
             r.RenderDocument();
             r.PdfDocument.Save(this.Output);
             this.CleanTemporaryPlotFiles();
-            this.Output.Close();
             this.isClosed = true;
         }
 

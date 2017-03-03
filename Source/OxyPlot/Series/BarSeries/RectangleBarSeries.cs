@@ -154,23 +154,12 @@ namespace OxyPlot.Series
 
             var clippingRect = this.GetClippingRect();
 
-            int startIdx = 0;
-            double xmax = double.MaxValue;
+            int i = 0;
 
-            if (this.IsXMonotonic)
+            this.ActualBarRectangles = new List<OxyRect>();
+
+            foreach (var item in this.Items)
             {
-                this.ActualBarRectangles = new List<OxyRect>();
-                var xmin = this.XAxis.ActualMinimum;
-                xmax = this.XAxis.ActualMaximum;
-                this.WindowStartIndex = this.UpdateWindowStartIndex(this.Items, rect => rect.X0, xmin, this.WindowStartIndex);
-
-                startIdx = this.WindowStartIndex;
-            }
-
-            int clipCount = 0;
-            for (int i = startIdx; i < this.Items.Count; i++)
-            {
-                var item = this.Items[i];
                 if (!this.IsValid(item.X0) || !this.IsValid(item.X1)
                     || !this.IsValid(item.Y0) || !this.IsValid(item.Y1))
                 {
@@ -194,7 +183,7 @@ namespace OxyPlot.Series
                 if (this.LabelFormatString != null)
                 {
                     var s = StringHelper.Format(
-                        this.ActualCulture,
+                        this.ActualCulture, 
                         this.LabelFormatString,
                         this.GetItem(i),
                         item.X0,
@@ -219,11 +208,7 @@ namespace OxyPlot.Series
                         VerticalAlignment.Middle);
                 }
 
-                clipCount += item.X0 > xmax ? 1 : 0;
-                if (clipCount > 1)
-                {
-                    break;
-                }
+                i++;
             }
         }
 
@@ -248,11 +233,12 @@ namespace OxyPlot.Series
         /// <summary>
         /// Sets the default values.
         /// </summary>
-        protected internal override void SetDefaultValues()
+        /// <param name="model">The model.</param>
+        protected internal override void SetDefaultValues(PlotModel model)
         {
             if (this.FillColor.IsAutomatic())
             {
-                this.defaultFillColor = this.PlotModel.GetDefaultColor();
+                this.defaultFillColor = model.GetDefaultColor();
             }
         }
 
@@ -284,8 +270,6 @@ namespace OxyPlot.Series
         {
             base.UpdateMaxMin();
 
-            this.IsXMonotonic = true;
-
             if (this.Items == null || this.Items.Count == 0)
             {
                 return;
@@ -296,22 +280,12 @@ namespace OxyPlot.Series
             double minValueY = double.MaxValue;
             double maxValueY = double.MinValue;
 
-            double lastX0 = double.MinValue;
-            double lastX1 = double.MinValue;
             foreach (var item in this.Items)
             {
-                if (item.X0 < lastX0 || item.X1 < lastX1)
-                {
-                    this.IsXMonotonic = false;
-                }
-
                 minValueX = Math.Min(minValueX, Math.Min(item.X0, item.X1));
                 maxValueX = Math.Max(maxValueX, Math.Max(item.X1, item.X0));
                 minValueY = Math.Min(minValueY, Math.Min(item.Y0, item.Y1));
                 maxValueY = Math.Max(maxValueY, Math.Max(item.Y0, item.Y1));
-
-                lastX0 = item.X0;
-                lastX1 = item.X1;
             }
 
             this.MinX = minValueX;

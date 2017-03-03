@@ -65,12 +65,12 @@ namespace OxyPlot.Series
 
                 if (double.IsNaN(u))
                 {
-                    u = 1; // we are a tiny line, snap to the end
+                    continue;
                 }
 
                 if (u < 0 || u > 1)
                 {
-                    u = 1; // we are outside the line, snap to the end
+                    continue; // outside line
                 }
 
                 var sp = sp1 + ((sp2 - sp1) * u);

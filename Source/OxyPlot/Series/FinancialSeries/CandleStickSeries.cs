@@ -10,6 +10,9 @@
 namespace OxyPlot.Series
 {
     using System;
+    using System.Reflection;
+
+    using OxyPlot.Axes;
 
     /// <summary>
     /// Represents a "higher performance" ordered OHLC series for candlestick charts
@@ -29,6 +32,11 @@ namespace OxyPlot.Series
         /// The minimum X gap between successive data items
         /// </summary>
         private double minDx;
+
+        /// <summary>
+        /// The index of the data item at the start of visible window
+        /// </summary>
+        private int winIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref = "CandleStickSeries" /> class.
@@ -58,6 +66,22 @@ namespace OxyPlot.Series
         public double CandleWidth { get; set; }
 
         /// <summary>
+        /// Append a bar to the series (must be in X order)
+        /// </summary>
+        /// <param name="bar">Bar to be appended.</param>
+        public void Append(object bar)
+        {
+            var nbar = this.ToNativeBar(bar);
+            var items = this.Items;
+            if (items.Count > 0 && items[items.Count - 1].X > nbar.X)
+            {
+                throw new ArgumentException("cannot append bar out of order, must be sequential in X");
+            }
+
+            items.Add(nbar);
+        }
+
+        /// <summary>
         /// Fast index of bar where max(bar[i].X) &lt;= x 
         /// </summary>
         /// <returns>The index of the bar closest to X, where max(bar[i].X) &lt;= x.</returns>
@@ -67,10 +91,10 @@ namespace OxyPlot.Series
         {
             if (startIndex < 0)
             {
-                startIndex = this.WindowStartIndex;
+                startIndex = this.winIndex;
             }
 
-            return this.FindWindowStartIndex(this.Items, item => item.X, x, startIndex);
+            return HighLowItem.FindIndex(this.Items, x, startIndex);
         }
 
         /// <summary>
@@ -106,9 +130,9 @@ namespace OxyPlot.Series
             // determine render range
             var xmin = this.XAxis.ActualMinimum;
             var xmax = this.XAxis.ActualMaximum;
-            this.WindowStartIndex = this.UpdateWindowStartIndex(items, item => item.X, xmin, this.WindowStartIndex);
+            this.winIndex = HighLowItem.FindIndex(items, xmin, this.winIndex);
 
-            for (int i = this.WindowStartIndex; i < nitems; i++)
+            for (int i = this.winIndex; i < nitems; i++)
             {
                 var bar = items[i];
 
@@ -220,7 +244,7 @@ namespace OxyPlot.Series
                 return null;
             }
 
-            var pidx = this.FindWindowStartIndex(this.Items, item => item.X, targetX, this.WindowStartIndex);
+            var pidx = HighLowItem.FindIndex(this.Items, targetX, this.winIndex);
             var nidx = ((pidx + 1) < this.Items.Count) ? pidx + 1 : pidx;
 
             Func<HighLowItem, double> distance = bar =>
@@ -271,7 +295,8 @@ namespace OxyPlot.Series
         protected internal override void UpdateData()
         {
             base.UpdateData();
-            
+            this.winIndex = 0;
+
             // determine minimum X gap between successive points
             var items = this.Items;
             var nitems = items.Count;
@@ -290,6 +315,48 @@ namespace OxyPlot.Series
             {
                 this.minDx = 1;
             }
+        }
+
+        /// <summary>
+        /// Convert incoming bar to native bar
+        /// </summary>
+        /// <returns>The native bar.</returns>
+        /// <param name="bar">Bar as object.</param>
+        private HighLowItem ToNativeBar(object bar)
+        {
+            var nativebar = bar as HighLowItem;
+
+            // if native bar can add direcly
+            if (nativebar != null)
+            {
+                return nativebar;
+            }
+
+            // otherwise must translate to native bar
+            var x = this.FieldValueOf(bar, this.DataFieldX);
+            var open = this.FieldValueOf(bar, this.DataFieldOpen);
+            var high = this.FieldValueOf(bar, this.DataFieldHigh);
+            var low = this.FieldValueOf(bar, this.DataFieldLow);
+            var close = this.FieldValueOf(bar, this.DataFieldClose);
+            return new HighLowItem(x, high, low, open, close);
+        }
+
+        /// <summary>
+        /// Gets the value of the specified property in the specified item. 
+        /// </summary>
+        /// <returns>The value of field.</returns>
+        /// <param name="item">Bar object.</param>
+        /// <param name="propertyName">Property name.</param>
+        private double FieldValueOf(object item, string propertyName)
+        {
+            if (propertyName != null)
+            {
+                var type = item.GetType();
+                var prop = type.GetRuntimeProperty(propertyName);
+                return Axis.ToDouble(prop.GetValue(item, null));
+            }
+            
+            return double.NaN;
         }
     }
 }
