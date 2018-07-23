@@ -100,7 +100,7 @@ namespace OxyPlot.Axes
                 }
 
                 double nextInterval = goodIntervals.FirstOrDefault(i => i > interval);
-                if (Math.Abs(nextInterval) < 1.0)
+                if (nextInterval == default(double))
                 {
                     nextInterval = interval * 2;
                 }
